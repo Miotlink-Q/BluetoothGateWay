@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.SweepGradient;
+
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+
 
 import com.mlink.bluetooth.gateway.R;
 
@@ -18,7 +22,6 @@ import java.util.Iterator;
 import androidx.annotation.Nullable;
 
 public class RadarView extends View {
-
     //默认的主题颜色
     private int DEFAULT_COLOR = Color.parseColor("#91D7F4");
 

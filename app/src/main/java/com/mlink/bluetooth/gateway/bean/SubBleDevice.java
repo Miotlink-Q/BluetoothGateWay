@@ -9,6 +9,8 @@ public class SubBleDevice {
     @Id
     private int  id=0;
 
+    private String macCode="";
+
     /**
      * 子设备ID
      */
@@ -59,5 +61,21 @@ public class SubBleDevice {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMacCode() {
+        return macCode;
+    }
+
+    public void setMacCode(String macCode) {
+        this.macCode = macCode;
     }
 }
