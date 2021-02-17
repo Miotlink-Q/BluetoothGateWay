@@ -16,5 +16,6 @@ public class SubBleDeviceAdapter extends BaseQuickAdapter<SubBleDevice, BaseView
     @Override
     protected void convert(@NotNull BaseViewHolder baseViewHolder, SubBleDevice subBleDevice) {
 
+        baseViewHolder.setText(R.id.sub_device_name_tv,subBleDevice.getSubId());
     }
 }
