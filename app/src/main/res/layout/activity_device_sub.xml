@@ -20,36 +20,35 @@
     </RelativeLayout>
 
 
+    <RelativeLayout
+        android:id="@+id/scan_blue_rl"
 
-    <RelativeLayout 
-        android:id="@+id/scan_blue_rl" 
-        android:layout_below="@+id/scan_ble_title" 
-        android:background="#019BFF" 
-        android:layout_width="match_parent" 
-        android:layout_height="40dp"> 
+        android:background="#019BFF"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
         <com.mlink.bluetooth.gateway.view.RadarView
-            android:id="@+id/radar" 
-            android:layout_width="32dp" 
-            android:layout_height="32dp" 
-            android:layout_alignParentLeft="true" 
-            app:circleColor="@color/white" 
-            app:circleNum="4" 
-            app:flicker="2" 
-            android:layout_centerVertical="true" 
-            app:speed="2" 
-            android:layout_marginLeft="10dp" 
-            app:sweepColor="#565cd6" 
-            app:showCross="false" 
-            app:raindropNum="4"/> 
-        <TextView 
-            android:layout_toRightOf="@+id/radar" 
-            android:text="正在扫描可添加子设备" 
-            android:layout_centerVertical="true" 
-            android:layout_marginLeft="10dp" 
-            android:textColor="@color/white" 
-            android:textSize="16dp" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"/> 
+            android:id="@+id/radar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            app:circleColor="@color/white"
+            app:circleNum="4"
+            app:flicker="2"
+            android:layout_centerVertical="true"
+            app:speed="2"
+            android:layout_marginLeft="10dp"
+            app:sweepColor="#565cd6"
+            app:showCross="false"
+            app:raindropNum="4"/>
+        <TextView
+            android:layout_toRightOf="@+id/radar"
+            android:text="正在扫描附近的可添加子设备"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
 
