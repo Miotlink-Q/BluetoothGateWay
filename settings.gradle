@@ -1,0 +1,5 @@
+include ':m-bean-library'
+include ':ml-bluetooth'
+
+include ':app'
+rootProject.name = "BluetoothGateWay"
