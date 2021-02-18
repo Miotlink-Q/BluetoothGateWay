@@ -12,8 +12,8 @@
             android:layout_marginLeft="10dp"
             android:id="@+id/bluetooth_iv"
             android:src="@mipmap/bluetooth_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="35dp"
+            android:layout_height="35dp"/>
 
         <TextView
             android:layout_toRightOf="@+id/bluetooth_iv"
