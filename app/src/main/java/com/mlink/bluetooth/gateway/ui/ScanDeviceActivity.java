@@ -116,7 +116,7 @@ class ScanDeviceActivity extends BaseActivity {
                 && !Utils.isGpsOpen(mContext)){
             new AlertDialog.Builder(mContext)
                     .setTitle("提示")
-                    .setMessage("为了更精确的扫描到Bluetooth LE设备,请打开GPS定位")
+                    .setMessage("为了更精确的扫描到Bluetooth设备,请打开GPS定位")
                     .setPositiveButton("确定", (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivityForResult(intent,1001);
