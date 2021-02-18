@@ -139,7 +139,6 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onLeScan(BleMLDevice device, int rssi, byte[] scanRecord) {
             if (!TextUtils.isEmpty(device.getBleName())&&device.getBleName().contains("Simple")){
-
                 if (!bluetoothDeviceStore.getDeviceMap().containsKey(device.getBleAddress())){
                     bluetoothDeviceStore.addDevice(device);
                     SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(device.getBleAddress(),1);
