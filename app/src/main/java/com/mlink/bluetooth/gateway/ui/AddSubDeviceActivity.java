@@ -67,12 +67,14 @@ public class AddSubDeviceActivity extends BaseActivity {
                    String value="";
                    if (subBleDevice.getState()==0){
                        value="FFFA0004"+subId+"1101";
-
+                       subBleManager.updateSubDeviceState(0,subBleDevice.getMacCode(),subBleDevice.getSubId());
                    }else {
                        value="FFFA0004"+subId+"1100";
+                       subBleManager.updateSubDeviceState(0,subBleDevice.getMacCode(),subBleDevice.getSubId());
                    }
                    byte [] bytes= ByteUtils.hexStr2Bytes(value);
                    ble.writeByUuid(bleMLDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(),bleWriteCallback);
+                   subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(subBleDevice.getMacCode()));
                }
             }
         });

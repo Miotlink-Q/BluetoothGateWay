@@ -93,20 +93,28 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                SubBleDevice subBleDevice=(SubBleDevice) adapter.getItem(position);
                if (subBleDevice!=null){
                    byte [] bytes=null;
-                   if (subBleDevice.getState()==1){
-                       bytes=ByteUtils.hexStr2Bytes("FFFA0004"+subBleDevice.getSubId()+"1100");
-                   }else {
-                       bytes=ByteUtils.hexStr2Bytes("FFFA0004"+subBleDevice.getSubId()+"1101");
-                   }
                    BleMLDevice bleDevice = ble.getBleDevice(subBleDevice.getMacCode());
-
                    if (bleDevice!=null&&bleDevice.isConnected()){
+                       if (subBleDevice.getState()==1){
+                           bytes=ByteUtils.hexStr2Bytes("FFFA0004"+subBleDevice.getSubId()+"1100");
+                           subBleManager.updateSubDeviceState(0,subBleDevice.getMacCode(),subBleDevice.getSubId());
+                       }else {
+                           bytes=ByteUtils.hexStr2Bytes("FFFA0004"+subBleDevice.getSubId()+"1101");
+                           subBleManager.updateSubDeviceState(1,subBleDevice.getMacCode(),subBleDevice.getSubId());
+                       }
                        ble.writeByUuid(bleDevice, bytes, Ble.options().getUuidService(), Ble.options().getUuidWriteCha(), new BleWriteCallback<BleMLDevice>() {
                            @Override
                            public void onWriteSuccess(BleMLDevice device, BluetoothGattCharacteristic characteristic) {
 
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(device.getBleAddress()));
+                                   }
+                               });
                            }
                        });
+
                    }
 
                }
@@ -173,13 +181,20 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                 if (bleDevice.isConnected()){
                     bytes=ByteUtils.hexStr2Bytes("FFFA000400001200");
                     if (isSwitchState){
+                        isSwitchState=false;
+                        imageView.setImageResource(R.mipmap.switch_close);
+                        subBleManager.updateSubDeviceState(0,bleDeviceInfo.getMacCode(),"");
                         ble.writeByUuid(bleDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(), new BleWriteCallback<BleMLDevice>() {
                             @Override
                             public void onWriteSuccess(BleMLDevice device, BluetoothGattCharacteristic characteristic) {
 
                             }
                         });
+
                     }else {
+                        subBleManager.updateSubDeviceState(1,bleDeviceInfo.getMacCode(),"");
+                        isSwitchState=true;
+                        imageView.setImageResource(R.mipmap.switch_open_1);
                         bytes=ByteUtils.hexStr2Bytes("FFFA000400001201");
                         ble.writeByUuid(bleDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(), new BleWriteCallback<BleMLDevice>() {
                             @Override
@@ -188,6 +203,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                             }
                         });
                     }
+                    subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDevice.getBleAddress()));
                 }
                 break;
         }
