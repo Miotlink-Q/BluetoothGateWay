@@ -6,8 +6,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.ml.bluetooth.gateway.ble.Ble;
 import com.mlink.bluetooth.gateway.R;
+import com.mlink.bluetooth.gateway.application.GateWayApplication;
 import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
+import com.mlink.bluetooth.gateway.db.SubBleManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +36,14 @@ class BleDeviceAdapter extends BaseQuickAdapter<BleDeviceInfo, BaseViewHolder> {
                 imageView.setImageResource(R.mipmap.bluetooth_device_2);
             }
         }else {
-            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId()+" "+"(未连接)");
-            imageView.setImageResource(R.mipmap.bluetooth_device_2);
+            BleDeviceInfo bleDeviceInfo1= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfo(bleDeviceInfo.getId());
+            if (bleDeviceInfo1!=null){
+                if (bleDeviceInfo1.getState()==1){
+                    baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId()+" "+"(搜索到未连接)");
+                    imageView.setImageResource(R.mipmap.bluetooth_device_2);
+                }
+            }
+
         }
 
 
