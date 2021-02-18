@@ -94,6 +94,7 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        bluetoothDeviceStore.clear();
         if (ble!=null){
             if(ble.isBleEnable()){
                 ble.startScan(bleMLDeviceBleScanCallback);
