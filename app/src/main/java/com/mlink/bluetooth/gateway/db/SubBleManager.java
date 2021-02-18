@@ -78,8 +78,8 @@ class SubBleManager extends DataManager {
     public void deleteDevice(String id){
 
         try {
-            dbUtils.execQuery("delete from ble_device where macCode ="+id);
-            dbUtils.execQuery("delete from sub_ble_table where macCode ="+id);
+            dbUtils.execQuery("delete from ble_device where macCode ='"+id+"'");
+            dbUtils.execQuery("delete from sub_ble_table where macCode = '"+id+"'");
         } catch (DbException e) {
             e.printStackTrace();
         }
