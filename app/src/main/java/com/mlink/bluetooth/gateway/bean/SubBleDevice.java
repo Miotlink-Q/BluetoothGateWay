@@ -31,7 +31,7 @@ public class SubBleDevice {
     /**
      * 子设备开关状态
      */
-    private int state=0;
+    private int state=1;
 
     public String getSubId() {
         return subId;
