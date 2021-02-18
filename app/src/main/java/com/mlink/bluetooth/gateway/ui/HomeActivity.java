@@ -107,7 +107,7 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                 }
             }
             bleDeviceInfos= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos();
-            BleLog.e("--",bleDeviceInfos.toString());
+
             bleDeviceAdapter.setNewInstance(bleDeviceInfos);
         }
 
