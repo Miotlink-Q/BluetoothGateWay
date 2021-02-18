@@ -52,7 +52,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
         subBleDeviceAdapter=new SubBleDeviceAdapter();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(subBleDeviceAdapter);
-        subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDeviceInfo.getId()));
+        subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDeviceInfo.getMacCode()));
         if (bleDeviceInfo!=null){
             bleDevice = ble.getBleDevice(bleDeviceInfo.getMacCode());
         }
