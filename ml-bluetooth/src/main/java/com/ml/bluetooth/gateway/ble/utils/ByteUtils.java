@@ -74,6 +74,19 @@ public class ByteUtils {
         return b.toString();
     }
 
+    public static String[] bytes2HexStrings(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        String [] strings=new String[bytes.length];
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i<bytes.length; i++) {
+            strings[i]=String.format("%02x", bytes[i] & 0xFF).toUpperCase();
+
+        }
+        return strings;
+    }
+
     public static byte[] hexStr2Bytes(String str) {
         if (str == null) {
             return null;
