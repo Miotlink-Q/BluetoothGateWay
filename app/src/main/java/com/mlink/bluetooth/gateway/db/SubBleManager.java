@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
 import com.miot.android.data.d.db.DBUtils.DataManager;
 import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
@@ -56,10 +57,17 @@ class SubBleManager extends DataManager {
 
     public void updateSubDeviceState(int state,String macCode,String subId){
         try {
+            SubBleDevice subBleDevice=new SubBleDevice();
+            subBleDevice.setState(state);
+            subBleDevice.setMacCode(macCode);
             if (TextUtils.isEmpty(subId)){
-                dbUtils.execQuery("update sub_ble_table set state = "+state+"where macCode ="+macCode);
+
+                WhereBuilder whereBuilder= WhereBuilder.b("macCode","=",macCode);
+                dbUtils.update(subBleDevice,whereBuilder,"state");
+
             }else {
-                dbUtils.execQuery("update sub_ble_table set state = "+state+"where macCode ="+macCode +"and subId ="+subId);
+                WhereBuilder whereBuilder= WhereBuilder.b("macCode","=",macCode).and("subId","=",subId);
+                dbUtils.update(subBleDevice,whereBuilder,"state");
             }
 
         } catch (Exception e) {
@@ -78,8 +86,10 @@ class SubBleManager extends DataManager {
     public void deleteDevice(String id){
 
         try {
-            dbUtils.execQuery("delete from ble_device where macCode ='"+id+"'");
-            dbUtils.execQuery("delete from sub_ble_table where macCode = '"+id+"'");
+            WhereBuilder whereBuilder=WhereBuilder.b("macCode","=",id);
+            dbUtils.delete(BleDeviceInfo.class,whereBuilder);
+            WhereBuilder whereBuilder1=WhereBuilder.b("macCode","=",id);
+            dbUtils.delete(SubBleDevice.class,whereBuilder1);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -98,6 +108,7 @@ class SubBleManager extends DataManager {
 
     public void updateBleDeviceInfo(String id,int state){
         try {
+
             dbUtils.execQuery("update ble_device set state = "+state+" where id = '"+id+"'");
         } catch (DbException e) {
             e.printStackTrace();
