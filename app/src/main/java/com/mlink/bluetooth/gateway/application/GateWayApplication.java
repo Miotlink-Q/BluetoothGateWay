@@ -3,11 +3,14 @@ package com.mlink.bluetooth.gateway.application;
 import android.app.Application;
 
 
+import com.miot.android.data.d.db.DBUtils.DataManager;
 import com.ml.bluetooth.gateway.ble.Ble;
 import com.ml.bluetooth.gateway.ble.BleLog;
 import com.ml.bluetooth.gateway.ble.model.BleFactory;
 import com.ml.bluetooth.gateway.ble.utils.UuidUtils;
+import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
+import com.mlink.bluetooth.gateway.bean.SubBleDevice;
 
 import java.util.UUID;
 
@@ -17,11 +20,13 @@ class GateWayApplication extends Application {
 
     private static GateWayApplication instance=null;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance=this;
 
+        DataManager.cazz= new Class[]{BleDeviceInfo.class, SubBleDevice.class};
         Ble.options()
                 .setLogBleEnable(true)//设置是否输出打印蓝牙日志
                 .setThrowBleException(true)//设置是否抛出蓝牙异常
