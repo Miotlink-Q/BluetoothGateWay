@@ -79,6 +79,8 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
             }
 
         }
+        bleDeviceInfos= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos();
+        bleDeviceAdapter.setNewInstance(bleDeviceInfos);
     }
 
     @Override
@@ -112,7 +114,6 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                 if (!bluetoothDeviceStore.getDeviceMap().containsKey(device.getBleAddress())){
                     bluetoothDeviceStore.addDevice(device);
                     SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(device.getBleAddress(),1);
-
                 }
             }
 

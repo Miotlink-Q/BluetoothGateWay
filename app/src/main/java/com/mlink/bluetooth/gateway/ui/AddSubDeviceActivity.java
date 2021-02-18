@@ -82,8 +82,14 @@ public class AddSubDeviceActivity extends BaseActivity {
             @Override
             public void onServicesDiscovered(BleMLDevice device, BluetoothGatt gatt) {
                 super.onServicesDiscovered(device, gatt);
-                if (device.isConnected()){
 
+            }
+
+            @Override
+            public void onReady(BleMLDevice device) {
+                super.onReady(device);
+                ble.enableNotify(device, true, bleMLDeviceBleNotifyCallback);
+                if (device.isConnected()){
                     if (myThread!=null){
                         isRunning=true;
                         subId="FFFF";
@@ -91,12 +97,6 @@ public class AddSubDeviceActivity extends BaseActivity {
 
                     }
                 }
-            }
-
-            @Override
-            public void onReady(BleMLDevice device) {
-                super.onReady(device);
-                ble.enableNotify(device, true, bleMLDeviceBleNotifyCallback);
             }
         });
 
