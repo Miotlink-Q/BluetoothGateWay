@@ -165,7 +165,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.switch_iv:
-                BleMLDevice bleDevice = ble.getBleDevice(this.bleDevice.getBleAddress());
+                BleMLDevice bleDevice = ble.getBleDevice(bleDeviceInfo.getId());
                 byte[] bytes=null;
                 if (bleDevice.isConnected()){
                     bytes=ByteUtils.hexStr2Bytes("FFFA000400001200");
