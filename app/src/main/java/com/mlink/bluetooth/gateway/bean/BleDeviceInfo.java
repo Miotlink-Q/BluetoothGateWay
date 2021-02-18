@@ -1,11 +1,17 @@
 package com.mlink.bluetooth.gateway.bean;
 
+import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
+
+
 
 @Table(name = "ble_device")
 public class BleDeviceInfo {
 
+    @Id
     private String id="";
+
+    private String macCode="";
 
     private int state=0;
 
@@ -33,5 +39,13 @@ public class BleDeviceInfo {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getMacCode() {
+        return macCode;
+    }
+
+    public void setMacCode(String macCode) {
+        this.macCode = macCode;
     }
 }
