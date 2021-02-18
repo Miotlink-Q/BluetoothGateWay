@@ -41,6 +41,12 @@ class ScanDeviceActivity extends BaseActivity {
 
         radarView=findViewById(R.id.radar);
         recyclerView=findViewById(R.id.recyclerview);
+        findViewById(R.id.back_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         scanDeviceAdapter=new ScanDeviceAdapter(R.layout.item_scan_device);

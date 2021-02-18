@@ -143,12 +143,12 @@ public class AddSubDeviceActivity extends BaseActivity {
             super.run();
             while (isRunning){
                 try {
+                    Thread.sleep(5000);
                     if (!TextUtils.isEmpty(subId)){
                         byte [] bytes= ByteUtils.hexStr2Bytes("FFFA0004"+subId+"0100");
                         ble.writeByUuid(bleMLDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(),bleWriteCallback);
                         subId="";
                     }
-                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
