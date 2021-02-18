@@ -172,7 +172,7 @@ public class AddSubDeviceActivity extends BaseActivity {
                     byte[] value = characteristic.getValue();
                     String s = ByteUtils.bytes2HexStr(value);
                     BleLog.e("error", s);
-                    if (TextUtils.isEmpty(s)&&s.startsWith("fffa")&&s.endsWith("03")){
+                    if (!TextUtils.isEmpty(s)&&s.startsWith("fffa")&&s.endsWith("03")){
                         String[] strings = ByteUtils.bytes2HexStrings(value);
                         BleLog.e("value",strings.toString());
                         if (strings!=null&&strings.length>0){
