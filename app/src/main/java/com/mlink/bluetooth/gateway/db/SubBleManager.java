@@ -106,10 +106,13 @@ class SubBleManager extends DataManager {
     }
 
 
-    public void updateBleDeviceInfo(String id,int state){
+    public void updateBleDeviceInfo(String macCode,int state){
         try {
+            BleDeviceInfo bleDeviceInfo =new BleDeviceInfo();
+            bleDeviceInfo.setState(state);
+            WhereBuilder whereBuilder= WhereBuilder.b("macCode","=",macCode);
+            dbUtils.update(bleDeviceInfo,whereBuilder,"state");
 
-            dbUtils.execQuery("update ble_device set state = "+state+" where id = '"+id+"'");
         } catch (DbException e) {
             e.printStackTrace();
         }
