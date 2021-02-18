@@ -39,7 +39,7 @@ class BleDeviceAdapter extends BaseQuickAdapter<BleDeviceInfo, BaseViewHolder> {
             BleDeviceInfo bleDeviceInfo1= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfo(bleDeviceInfo.getId());
             if (bleDeviceInfo1!=null){
                 if (bleDeviceInfo1.getState()==1){
-                    baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(搜索到未连接)");
+                    baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已发现)");
                     imageView.setImageResource(R.mipmap.bluetooth_device_2);
                 }
             }
