@@ -25,13 +25,19 @@ class BleDeviceAdapter extends BaseQuickAdapter<BleDeviceInfo, BaseViewHolder> {
         baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId());
         ImageView imageView=baseViewHolder.itemView.findViewById(R.id.device_iv);
         BleMLDevice bleDevice = ble.getBleDevice(bleDeviceInfo.getId());
-        if (bleDevice.isConnected()){
-            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId()+" "+"(已连接)");
-            imageView.setImageResource(R.mipmap.bluetooth_device_1);
+        if (bleDevice!=null){
+            if (bleDevice.isConnected()){
+                baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId()+" "+"(已连接)");
+                imageView.setImageResource(R.mipmap.bluetooth_device_1);
+            }else {
+                baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId()+" "+"(未连接)");
+                imageView.setImageResource(R.mipmap.bluetooth_device_2);
+            }
         }else {
             baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId()+" "+"(未连接)");
             imageView.setImageResource(R.mipmap.bluetooth_device_2);
         }
+
 
     }
 }
