@@ -54,13 +54,13 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
         recyclerView.setAdapter(subBleDeviceAdapter);
         subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDeviceInfo.getId()));
         if (bleDeviceInfo!=null){
-            bleDevice = ble.getBleDevice(bleDeviceInfo.getId());
+            bleDevice = ble.getBleDevice(bleDeviceInfo.getMacCode());
         }
         if (bleDevice!=null&&bleDevice.isConnected()){
             textView.setText("设备控制(已连接)");
             ble.enableNotify(bleDevice,true,bleNotifyCallback);
         }else {
-            ble.connect(bleDeviceInfo.getId(), new BleConnectCallback<BleMLDevice>() {
+            ble.connect(bleDeviceInfo.getMacCode(), new BleConnectCallback<BleMLDevice>() {
                 @Override
                 public void onConnectionChanged(BleMLDevice device) {
                     if (device.isConnected()){
@@ -165,7 +165,10 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.switch_iv:
-                BleMLDevice bleDevice = ble.getBleDevice(bleDeviceInfo.getId());
+                BleMLDevice bleDevice = ble.getBleDevice(bleDeviceInfo.getMacCode());
+                if(bleDevice==null){
+                    return;
+                }
                 byte[] bytes=null;
                 if (bleDevice.isConnected()){
                     bytes=ByteUtils.hexStr2Bytes("FFFA000400001200");
