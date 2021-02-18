@@ -139,7 +139,13 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                             subBleManager.updateSubDeviceState(0,device.getBleAddress(),values[4]+values[5]);
                         }
                     }
-                    subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDevice.getBleAddress()));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDevice.getBleAddress()));
+                        }
+                    });
+
                 }
 
             }

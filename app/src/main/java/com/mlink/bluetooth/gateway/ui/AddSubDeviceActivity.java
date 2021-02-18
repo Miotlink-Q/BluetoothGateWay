@@ -186,9 +186,15 @@ public class AddSubDeviceActivity extends BaseActivity {
                             bleDeviceInfo.setId(device.getBleAddress());
                             bleDeviceInfo.setState(1);
                             subBleManager.addDevice(bleDeviceInfo);
-                            List<SubBleDevice> subBleDevices = subBleManager.getSubBleDevices(bleMLDevice.getBleAddress());
-                            BleLog.e("subBleDevices",subBleDevices.toString());
-                            subBleDeviceAdapter.setNewInstance(subBleDevices);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    List<SubBleDevice> subBleDevices = subBleManager.getSubBleDevices(bleMLDevice.getBleAddress());
+                                    BleLog.e("subBleDevices",subBleDevices.toString());
+                                    subBleDeviceAdapter.setNewInstance(subBleDevices);
+                                }
+                            });
                             if (TextUtils.isEmpty(subId)){
                                 subId=strings[4]+strings[5];
                             }
