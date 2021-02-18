@@ -18,6 +18,7 @@ import com.mlink.bluetooth.gateway.adapter.ScanDeviceAdapter;
 import com.mlink.bluetooth.gateway.base.BaseActivity;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
 import com.mlink.bluetooth.gateway.bean.BluetoothDeviceStore;
+import com.mlink.bluetooth.gateway.view.RadarView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -34,9 +35,11 @@ class ScanDeviceActivity extends BaseActivity {
 
     private TextView textView;
     private Ble<BleMLDevice> ble = Ble.getInstance();
+    private RadarView radarView=null;
     @Override
     public void initView() throws Exception {
 
+        radarView=findViewById(R.id.radar);
         recyclerView=findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
@@ -81,10 +84,22 @@ class ScanDeviceActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkGpsStatus();
+        if (radarView!=null){
+            radarView.start();
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         if (ble.isScanning()) {
             ble.stopScan();
+        }
+        if (radarView!=null){
+            radarView.stop();
         }
     }
 
@@ -102,7 +117,10 @@ class ScanDeviceActivity extends BaseActivity {
                     .create()
                     .show();
         }else {
-            ble.startScan(scanCallback);
+            if (ble!=null){
+                ble.startScan(scanCallback);
+            }
+
         }
     }
 

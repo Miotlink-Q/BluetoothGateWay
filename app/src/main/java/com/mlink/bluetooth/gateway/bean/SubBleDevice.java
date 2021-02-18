@@ -78,4 +78,16 @@ public class SubBleDevice {
     public void setMacCode(String macCode) {
         this.macCode = macCode;
     }
+
+    @Override
+    public String toString() {
+        return "SubBleDevice{" +
+                "id=" + id +
+                ", macCode='" + macCode + '\'' +
+                ", subId='" + subId + '\'' +
+                ", name='" + name + '\'' +
+                ", onlineState=" + onlineState +
+                ", state=" + state +
+                '}';
+    }
 }

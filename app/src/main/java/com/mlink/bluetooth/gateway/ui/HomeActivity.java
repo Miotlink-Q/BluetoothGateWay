@@ -3,18 +3,29 @@ package com.mlink.bluetooth.gateway.ui;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ml.bluetooth.gateway.ble.Ble;
 import com.ml.bluetooth.gateway.ble.BleLog;
+import com.ml.bluetooth.gateway.ble.callback.BleScanCallback;
 import com.ml.bluetooth.gateway.ble.callback.BleStatusCallback;
 import com.ml.bluetooth.gateway.ble.utils.Utils;
 import com.mlink.bluetooth.gateway.R;
+import com.mlink.bluetooth.gateway.adapter.BleDeviceAdapter;
+import com.mlink.bluetooth.gateway.application.GateWayApplication;
 import com.mlink.bluetooth.gateway.base.BaseActivity;
+import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
+import com.mlink.bluetooth.gateway.db.SubBleManager;
+
+import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public
 class HomeActivity extends BaseActivity implements View.OnClickListener {
@@ -22,10 +33,56 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView textView;
 
+    private RecyclerView recyclerView;
+
+
+    private List<BleDeviceInfo> bleDeviceInfos=null;
+
+    private BleDeviceAdapter bleDeviceAdapter=null;
+
+    private Ble<BleMLDevice> ble=Ble.getInstance();
+
     @Override
     public void initView() throws Exception {
         textView=findViewById(R.id.add_bluetooth);
+        recyclerView=findViewById(R.id.recyclerView);
         textView.setOnClickListener(this);
+        bleDeviceInfos= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos();
+        bleDeviceAdapter=new BleDeviceAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        recyclerView.getItemAnimator().setChangeDuration(300);
+        recyclerView.getItemAnimator().setMoveDuration(300);
+        recyclerView.setAdapter(bleDeviceAdapter);
+        bleDeviceAdapter.setNewInstance(bleDeviceInfos);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ble!=null){
+            if(ble.isBleEnable()){
+                ble.startScan(bleMLDeviceBleScanCallback);
+                List<BleMLDevice> connectedDevices = ble.getConnectedDevices();
+                if (connectedDevices!=null&&connectedDevices.size()>0){
+                    for (BleMLDevice mlDevice:connectedDevices){
+                        BleDeviceInfo bleDeviceInfo=SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfo(mlDevice.getBleAddress());
+                        if (bleDeviceInfo!=null){
+                            SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(mlDevice.getBleAddress(),2);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (ble!=null){
+            ble.stopScan();
+        }
     }
 
     @Override
@@ -41,6 +98,17 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
+
+    BleScanCallback<BleMLDevice> bleMLDeviceBleScanCallback=new BleScanCallback<BleMLDevice>() {
+        @Override
+        public void onLeScan(BleMLDevice device, int rssi, byte[] scanRecord) {
+            if (!TextUtils.isEmpty(device.getBleName())&&device.getBleName().contains("Simple")){
+                SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(device.getBleAddress(),1);
+            }
+
+        }
+    };
 
 
 }

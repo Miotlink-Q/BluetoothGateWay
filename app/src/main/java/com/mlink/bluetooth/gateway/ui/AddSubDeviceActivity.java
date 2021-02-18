@@ -14,6 +14,7 @@ import com.mlink.bluetooth.gateway.R;
 import com.mlink.bluetooth.gateway.adapter.SubBleDeviceAdapter;
 import com.mlink.bluetooth.gateway.application.GateWayApplication;
 import com.mlink.bluetooth.gateway.base.BaseActivity;
+import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
 import com.mlink.bluetooth.gateway.bean.SubBleDevice;
 import com.mlink.bluetooth.gateway.db.SubBleManager;
@@ -38,7 +39,7 @@ public class AddSubDeviceActivity extends BaseActivity {
 
     private SubBleDeviceAdapter subBleDeviceAdapter=null;
 
-    private List<SubBleDevice> subBleDevices=new ArrayList<>();
+
 
     private RadarView radarView=null;
 
@@ -112,6 +113,17 @@ public class AddSubDeviceActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRunning=false;
+        subId="";
+        if (myThread!=null){
+            myThread.interrupt();
+            myThread=null;
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
 
@@ -158,20 +170,25 @@ public class AddSubDeviceActivity extends BaseActivity {
 
                 if (uuid.equals(Ble.options().getUuidReadCha())) {
                     byte[] value = characteristic.getValue();
-
                     String s = ByteUtils.bytes2HexStr(value);
                     BleLog.e("error", s);
                     if (TextUtils.isEmpty(s)&&s.startsWith("fffa")&&s.endsWith("03")){
-                        String[] strings = ByteUtils.hexStr2Strings(s);
+                        String[] strings = ByteUtils.bytes2HexStrings(value);
+                        BleLog.e("value",strings.toString());
                         if (strings!=null&&strings.length>0){
-//                                        int len=Integer.parseInt(strings[2]+strings[3],16);
-//                                        int id=Integer.parseInt(strings[4]+strings[5],16);
                             SubBleDevice subBleDevice=new SubBleDevice();
                             subBleDevice.setSubId(strings[4]+strings[5]);
                             subBleDevice.setMacCode(device.getBleAddress());
                             subBleManager.addSubBleDevice(subBleDevice);
 
-                            subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleMLDevice.getBleAddress()));
+
+                            BleDeviceInfo bleDeviceInfo=new BleDeviceInfo();
+                            bleDeviceInfo.setId(device.getBleAddress());
+                            bleDeviceInfo.setState(1);
+                            subBleManager.addDevice(bleDeviceInfo);
+                            List<SubBleDevice> subBleDevices = subBleManager.getSubBleDevices(bleMLDevice.getBleAddress());
+                            BleLog.e("subBleDevices",subBleDevices.toString());
+                            subBleDeviceAdapter.setNewInstance(subBleDevices);
                             if (TextUtils.isEmpty(subId)){
                                 subId=strings[4]+strings[5];
                             }
