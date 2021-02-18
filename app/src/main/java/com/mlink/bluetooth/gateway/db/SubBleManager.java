@@ -75,6 +75,17 @@ class SubBleManager extends DataManager {
         }
     }
 
+    public void deleteDevice(String id){
+
+        try {
+            dbUtils.execQuery("delete from ble_device where macCode ="+id);
+            dbUtils.execQuery("delete from sub_ble_table where macCode ="+id);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public List<BleDeviceInfo> getBleDeviceInfos(){
         try {
             return dbUtils.findAll(BleDeviceInfo.class);
@@ -83,6 +94,7 @@ class SubBleManager extends DataManager {
         }
         return new ArrayList<>();
     }
+
 
     public void updateBleDeviceInfo(String id,int state){
         try {

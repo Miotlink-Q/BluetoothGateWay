@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.ml.bluetooth.gateway.ble.Ble;
 import com.ml.bluetooth.gateway.ble.BleLog;
 import com.ml.bluetooth.gateway.ble.callback.BleScanCallback;
@@ -66,6 +67,25 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                 BleDeviceInfo bleDeviceInfo=(BleDeviceInfo) adapter.getItem(position);
                 DeviceControllerActivity.bleDeviceInfo=bleDeviceInfo;
                 mContext.startActivity(new Intent(mContext,DeviceControllerActivity.class));
+            }
+        });
+        bleDeviceAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
+                BleDeviceInfo bleDeviceInfo=(BleDeviceInfo) adapter.getItem(position);
+
+                new AlertDialog.Builder(mContext)
+                        .setTitle("提示")
+                        .setMessage("是否删除该设备")
+                        .setPositiveButton("确定", (dialog, which) -> {
+
+                            SubBleManager.getInstance(GateWayApplication.getInstance()).deleteDevice(bleDeviceInfo.getMacCode());
+                            bleDeviceAdapter.setNewInstance(SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos());
+                        })
+                        .setNegativeButton("取消", null)
+                        .create()
+                        .show();
+                return false;
             }
         });
     }

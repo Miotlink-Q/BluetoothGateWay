@@ -3,7 +3,10 @@ package com.mlink.bluetooth.gateway.ui;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.text.TextUtils;
+import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.ml.bluetooth.gateway.ble.Ble;
 import com.ml.bluetooth.gateway.ble.BleLog;
 import com.ml.bluetooth.gateway.ble.callback.BleConnectCallback;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,7 +56,26 @@ public class AddSubDeviceActivity extends BaseActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         subBleManager=SubBleManager.getInstance(GateWayApplication.getInstance());
         subBleDeviceAdapter=new SubBleDeviceAdapter();
+
+
         recyclerView.setAdapter(subBleDeviceAdapter);
+        subBleDeviceAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+               SubBleDevice subBleDevice=(SubBleDevice) adapter.getItem(position);
+               if (subBleDevice!=null){
+                   String value="";
+                   if (subBleDevice.getState()==0){
+                       value="FFFA0004"+subId+"1101";
+
+                   }else {
+                       value="FFFA0004"+subId+"1100";
+                   }
+                   byte [] bytes= ByteUtils.hexStr2Bytes(value);
+                   ble.writeByUuid(bleMLDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(),bleWriteCallback);
+               }
+            }
+        });
         myThread=new MyThread();
         boolean isConnect=false;
         List<BleMLDevice> connectedDevices = ble.getConnectedDevices();
@@ -172,8 +195,9 @@ public class AddSubDeviceActivity extends BaseActivity {
                     byte[] value = characteristic.getValue();
                     String s = ByteUtils.bytes2HexStr(value);
                     BleLog.e("error", s);
+                    String[] strings = ByteUtils.bytes2HexStrings(value);
                     if (!TextUtils.isEmpty(s)&&s.startsWith("fffa")&&s.endsWith("03")){
-                        String[] strings = ByteUtils.bytes2HexStrings(value);
+
                         BleLog.e("value",strings.toString());
                         if (strings!=null&&strings.length>0){
                             SubBleDevice subBleDevice=new SubBleDevice();
@@ -200,6 +224,15 @@ public class AddSubDeviceActivity extends BaseActivity {
                                 subId=strings[4]+strings[5];
                             }
                         }
+                    }else if (strings.length>=8&&strings[6].equals("11")){
+                        if (strings[7].equals("01")){
+                            subBleManager.updateSubDeviceState(1,bleMLDevice.getBleAddress(),
+                                    strings[4]+strings[5]);
+                        }else {
+                            subBleManager.updateSubDeviceState(0,bleMLDevice.getBleAddress(),
+                                    strings[4]+strings[5]);
+                        }
+
                     }
                 }
             }
