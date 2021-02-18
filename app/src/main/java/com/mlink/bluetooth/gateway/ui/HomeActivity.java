@@ -74,15 +74,6 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         if (ble!=null){
             if(ble.isBleEnable()){
                 ble.startScan(bleMLDeviceBleScanCallback);
-                List<BleMLDevice> connectedDevices = ble.getConnectedDevices();
-                if (connectedDevices!=null&&connectedDevices.size()>0){
-                    for (BleMLDevice mlDevice:connectedDevices){
-                        BleDeviceInfo bleDeviceInfo=SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfo(mlDevice.getBleAddress());
-                        if (bleDeviceInfo!=null){
-                            SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(mlDevice.getBleAddress(),2);
-                        }
-                    }
-                }
             }
 
         }
