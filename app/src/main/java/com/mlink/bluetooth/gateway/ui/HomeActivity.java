@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.ml.bluetooth.gateway.ble.Ble;
 import com.ml.bluetooth.gateway.ble.BleLog;
 import com.ml.bluetooth.gateway.ble.callback.BleScanCallback;
@@ -22,6 +24,7 @@ import com.mlink.bluetooth.gateway.db.SubBleManager;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,6 +58,14 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.setAdapter(bleDeviceAdapter);
         bleDeviceAdapter.setNewInstance(bleDeviceInfos);
+        bleDeviceAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+                BleDeviceInfo bleDeviceInfo=(BleDeviceInfo) adapter.getItem(position);
+                DeviceControllerActivity.bleDeviceInfo=bleDeviceInfo;
+                mContext.startActivity(new Intent(mContext,DeviceControllerActivity.class));
+            }
+        });
     }
 
     @Override
