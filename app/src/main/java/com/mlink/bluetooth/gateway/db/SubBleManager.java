@@ -98,7 +98,7 @@ class SubBleManager extends DataManager {
 
     public void updateBleDeviceInfo(String id,int state){
         try {
-            dbUtils.execQuery("update ble_device set state = "+state+" where id ="+id);
+            dbUtils.execQuery("update ble_device set state = "+state+" where id = '"+id+"'");
         } catch (DbException e) {
             e.printStackTrace();
         }
