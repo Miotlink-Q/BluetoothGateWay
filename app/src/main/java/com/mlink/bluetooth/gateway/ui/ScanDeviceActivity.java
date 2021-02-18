@@ -92,6 +92,8 @@ class ScanDeviceActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bluetoothDeviceStore.clear();
+        scanDeviceAdapter.setNewInstance(bluetoothDeviceStore.getDeviceList());
         checkGpsStatus();
         if (radarView!=null){
             radarView.start();

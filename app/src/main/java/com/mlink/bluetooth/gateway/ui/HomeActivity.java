@@ -60,6 +60,7 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         recyclerView.getItemAnimator().setChangeDuration(300);
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.setAdapter(bleDeviceAdapter);
+
         bleDeviceAdapter.setNewInstance(bleDeviceInfos);
         bleDeviceAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -96,6 +97,12 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         if (ble!=null){
             if(ble.isBleEnable()){
                 ble.startScan(bleMLDeviceBleScanCallback);
+                List<BleMLDevice> connectedDevices = ble.getConnectedDevices();
+                if (connectedDevices!=null&&connectedDevices.size()>0){
+                    for (BleMLDevice bleMLDevice:connectedDevices){
+                        SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(bleMLDevice.getBleAddress(),2);
+                    }
+                }
             }
 
         }
@@ -134,6 +141,8 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                 if (!bluetoothDeviceStore.getDeviceMap().containsKey(device.getBleAddress())){
                     bluetoothDeviceStore.addDevice(device);
                     SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(device.getBleAddress(),1);
+                    bleDeviceInfos= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos();
+                    bleDeviceAdapter.setNewInstance(bleDeviceInfos);
                 }
             }
 

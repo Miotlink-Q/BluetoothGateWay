@@ -26,26 +26,16 @@ class BleDeviceAdapter extends BaseQuickAdapter<BleDeviceInfo, BaseViewHolder> {
     protected void convert(@NotNull BaseViewHolder baseViewHolder, BleDeviceInfo bleDeviceInfo) {
         baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getId());
         ImageView imageView=baseViewHolder.itemView.findViewById(R.id.device_iv);
-        BleMLDevice bleDevice = ble.getBleDevice(bleDeviceInfo.getMacCode());
-        if (bleDevice!=null){
-            if (bleDevice.isConnected()){
-                baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已连接)");
-                imageView.setImageResource(R.mipmap.bluetooth_device_1);
-            }else {
-                baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(未连接)");
-                imageView.setImageResource(R.mipmap.bluetooth_device_2);
-            }
+        if (bleDeviceInfo.getState()==1){
+            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已发现)");
+            imageView.setImageResource(R.mipmap.bluetooth_device_2);
+        }else if (bleDeviceInfo.getState()==2){
+            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已连接)");
+            imageView.setImageResource(R.mipmap.bluetooth_device_1);
         }else {
-            BleDeviceInfo bleDeviceInfo1= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfo(bleDeviceInfo.getId());
-            if (bleDeviceInfo1!=null){
-                if (bleDeviceInfo1.getState()==1){
-                    baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已发现)");
-                    imageView.setImageResource(R.mipmap.bluetooth_device_2);
-                }
-            }
-
+            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(未连接)");
+            imageView.setImageResource(R.mipmap.bluetooth_device_2);
         }
-
 
     }
 }
