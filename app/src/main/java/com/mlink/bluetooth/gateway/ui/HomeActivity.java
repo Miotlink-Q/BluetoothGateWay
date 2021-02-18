@@ -101,7 +101,7 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                 if (connectedDevices!=null&&connectedDevices.size()>0){
                     for (BleMLDevice bleMLDevice:connectedDevices){
                         SubBleManager.getInstance(GateWayApplication.getInstance()).
-                                updateBleDeviceInfo(bleMLDevice.getBleAddress().replaceAll(":",""),2);
+                                updateBleDeviceInfo(bleMLDevice.getBleAddress(),2);
                     }
                 }
             }
