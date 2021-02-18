@@ -60,7 +60,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
             textView.setText("设备控制(已连接)");
             ble.enableNotify(bleDevice,true,bleNotifyCallback);
         }else {
-            ble.connect(bleDevice, new BleConnectCallback<BleMLDevice>() {
+            ble.connect(bleDeviceInfo.getId(), new BleConnectCallback<BleMLDevice>() {
                 @Override
                 public void onConnectionChanged(BleMLDevice device) {
                     if (device.isConnected()){
@@ -82,7 +82,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                 public void onReady(BleMLDevice device) {
                     super.onReady(device);
                     if (device.isConnected()){
-                        ble.enableNotify(bleDevice,true,bleNotifyCallback);
+                        ble.enableNotify(device,true,bleNotifyCallback);
                     }
                 }
             });
@@ -100,7 +100,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                    }
                    BleMLDevice bleDevice = ble.getBleDevice(subBleDevice.getMacCode());
 
-                   if (bleDevice.isConnected()){
+                   if (bleDevice!=null&&bleDevice.isConnected()){
                        ble.writeByUuid(bleDevice, bytes, Ble.options().getUuidService(), Ble.options().getUuidWriteCha(), new BleWriteCallback<BleMLDevice>() {
                            @Override
                            public void onWriteSuccess(BleMLDevice device, BluetoothGattCharacteristic characteristic) {

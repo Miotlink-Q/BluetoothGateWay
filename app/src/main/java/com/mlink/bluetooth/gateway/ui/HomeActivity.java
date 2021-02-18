@@ -20,6 +20,7 @@ import com.mlink.bluetooth.gateway.application.GateWayApplication;
 import com.mlink.bluetooth.gateway.base.BaseActivity;
 import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
+import com.mlink.bluetooth.gateway.bean.BluetoothDeviceStore;
 import com.mlink.bluetooth.gateway.db.SubBleManager;
 
 import java.util.List;
@@ -39,6 +40,7 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
     private RecyclerView recyclerView;
 
 
+    private BluetoothDeviceStore bluetoothDeviceStore=new BluetoothDeviceStore();
     private List<BleDeviceInfo> bleDeviceInfos=null;
 
     private BleDeviceAdapter bleDeviceAdapter=null;
@@ -106,8 +108,14 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onLeScan(BleMLDevice device, int rssi, byte[] scanRecord) {
             if (!TextUtils.isEmpty(device.getBleName())&&device.getBleName().contains("Simple")){
-                SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(device.getBleAddress(),1);
+
+                if (!bluetoothDeviceStore.getDeviceMap().containsKey(device.getBleAddress())){
+                    bluetoothDeviceStore.addDevice(device);
+                    SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(device.getBleAddress(),1);
+
+                }
             }
+
 
         }
     };
