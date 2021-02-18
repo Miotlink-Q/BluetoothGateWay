@@ -66,7 +66,7 @@ class ScanDeviceActivity extends BaseActivity {
     }
 
     private void initBleStatus() {
-        checkGpsStatus();
+
         ble.setBleStatusCallback(new BleStatusCallback() {
             @Override
             public void onBluetoothStatusChanged(boolean isOn) {
