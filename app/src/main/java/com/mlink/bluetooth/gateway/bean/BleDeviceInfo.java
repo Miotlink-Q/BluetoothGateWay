@@ -48,4 +48,14 @@ public class BleDeviceInfo {
     public void setMacCode(String macCode) {
         this.macCode = macCode;
     }
+
+    @Override
+    public String toString() {
+        return "BleDeviceInfo{" +
+                "id='" + id + '\'' +
+                ", macCode='" + macCode + '\'' +
+                ", state=" + state +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
