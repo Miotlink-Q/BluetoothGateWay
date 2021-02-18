@@ -41,6 +41,8 @@ public class AddSubDeviceActivity extends BaseActivity {
 
     SubBleManager subBleManager=null;
 
+    private int level=0;
+
     private SubBleDeviceAdapter subBleDeviceAdapter=null;
 
 
@@ -170,6 +172,7 @@ public class AddSubDeviceActivity extends BaseActivity {
                 try {
                     Thread.sleep(5000);
                     if (!TextUtils.isEmpty(subId)){
+                        level++;
                         byte [] bytes= ByteUtils.hexStr2Bytes("FFFA0004"+subId+"0100");
                         ble.writeByUuid(bleMLDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(),bleWriteCallback);
                         subId="";
@@ -205,6 +208,7 @@ public class AddSubDeviceActivity extends BaseActivity {
                             SubBleDevice subBleDevice=new SubBleDevice();
                             subBleDevice.setSubId(strings[4]+strings[5]);
                             subBleDevice.setMacCode(device.getBleAddress());
+                            subBleDevice.setLevel(level);
                             subBleManager.addSubBleDevice(subBleDevice);
 
 

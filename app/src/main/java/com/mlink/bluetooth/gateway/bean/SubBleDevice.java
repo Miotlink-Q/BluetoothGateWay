@@ -16,6 +16,8 @@ public class SubBleDevice {
      */
     private String subId="";
 
+    private int level=0;
+
     /**
      * 子设备名称
      */
@@ -77,6 +79,14 @@ public class SubBleDevice {
 
     public void setMacCode(String macCode) {
         this.macCode = macCode;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override

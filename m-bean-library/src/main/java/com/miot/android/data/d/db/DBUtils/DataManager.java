@@ -22,7 +22,7 @@ public abstract class DataManager implements DbUtils.DbUpgradeListener {
 	public DataManager(Context context) {
 		this.context = context;
 		DbUtils.DaoConfig daoConfig = new DbUtils.DaoConfig(context);
-		daoConfig.setDbVersion(11);
+		daoConfig.setDbVersion(12);
 		daoConfig.setDbName(DBManager.DB_NAME);
 		daoConfig.setDbUpgradeListener(this);
 		this.dbUtils = DbUtils.create(daoConfig);
@@ -32,7 +32,7 @@ public abstract class DataManager implements DbUtils.DbUpgradeListener {
 	@Override
 	public void onUpgrade(DbUtils db, int oldVersion, int newVersion) {
 		try {
-			if (oldVersion <10) {
+			if (oldVersion <12) {
 				if (cazz!=null){
 					for (Class<?> className : cazz){
 						db.dropTable(className);
