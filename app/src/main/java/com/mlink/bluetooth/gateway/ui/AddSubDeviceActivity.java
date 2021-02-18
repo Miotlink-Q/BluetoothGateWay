@@ -183,8 +183,9 @@ public class AddSubDeviceActivity extends BaseActivity {
 
 
                             BleDeviceInfo bleDeviceInfo=new BleDeviceInfo();
-                            bleDeviceInfo.setId(device.getBleAddress());
+                            bleDeviceInfo.setId(device.getBleAddress().replaceAll(":",""));
                             bleDeviceInfo.setState(1);
+                            bleDeviceInfo.setMacCode(device.getBleAddress());
                             subBleManager.addDevice(bleDeviceInfo);
 
                             runOnUiThread(new Runnable() {
