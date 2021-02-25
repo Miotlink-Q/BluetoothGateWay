@@ -41,6 +41,7 @@
 
         <ImageView
             android:id="@+id/start_iv"
+            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/start_1"
@@ -85,7 +86,7 @@
             android:id="@+id/treeView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:lineColor="@android:color/holo_blue_dark"/>
+            app:lineColor="#0066ff"/>
     </FrameLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

@@ -43,7 +43,7 @@
             android:id="@+id/treeView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:lineColor="@android:color/holo_blue_dark"/>
+            app:lineColor="#0066ff"/>
     </FrameLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="20dp"
