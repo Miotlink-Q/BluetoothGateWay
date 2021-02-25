@@ -61,7 +61,8 @@ class ScanDeviceActivity extends BaseActivity {
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                 BleMLDevice item = (BleMLDevice)adapter.getItem(position);
                 AddSubDeviceActivity.bleMLDevice=item;
-                mContext.startActivity(new Intent(mContext,AddSubDeviceActivity.class));
+                SubBleDeviceAddActivity.bleMLDevice=item;
+                mContext.startActivity(new Intent(mContext,SubBleDeviceAddActivity.class));
             }
         });
     }
@@ -92,8 +93,8 @@ class ScanDeviceActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bluetoothDeviceStore.clear();
-        scanDeviceAdapter.setNewInstance(bluetoothDeviceStore.getDeviceList());
+//        bluetoothDeviceStore.clear();
+//        scanDeviceAdapter.setNewInstance(bluetoothDeviceStore.getDeviceList());
         checkGpsStatus();
         if (radarView!=null){
             radarView.start();

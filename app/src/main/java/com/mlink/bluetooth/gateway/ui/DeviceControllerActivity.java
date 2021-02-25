@@ -20,13 +20,17 @@ import com.mlink.bluetooth.gateway.base.BaseActivity;
 import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
 import com.mlink.bluetooth.gateway.bean.SubBleDevice;
+import com.mlink.bluetooth.gateway.bean.TreeSubBleDevice;
 import com.mlink.bluetooth.gateway.db.SubBleManager;
+import com.mlink.bluetooth.gateway.view.ViewHolder;
 
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import de.blox.treeview.BaseTreeAdapter;
+import de.blox.treeview.TreeView;
 
 public
 class DeviceControllerActivity extends BaseActivity implements View.OnClickListener {
@@ -40,10 +44,13 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
     private BleMLDevice bleDevice=null;
     private SubBleManager subBleManager=null;
     SubBleDeviceAdapter subBleDeviceAdapter=null;
+    private TreeView treeView;
+    private BaseTreeAdapter adapter = null;
     @Override
     public void initView() throws Exception {
         subBleManager=SubBleManager.getInstance(GateWayApplication.getInstance());
         recyclerView=findViewById(R.id.controller_recyclerview);
+        treeView = findViewById(R.id.treeView);
         imageView=findViewById(R.id.switch_iv);
         back=findViewById(R.id.back_iv);
         textView=findViewById(R.id.device_title_state);
@@ -53,6 +60,31 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(subBleDeviceAdapter);
         subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDeviceInfo.getMacCode()));
+        adapter = new BaseTreeAdapter<ViewHolder>(this, R.layout.item_node_sub_device) {
+            @NonNull
+            @Override
+            public ViewHolder onCreateViewHolder(View view) {
+                return new ViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
+
+                if (data instanceof SubBleDevice) {
+                    SubBleDevice subBleDevice = (SubBleDevice) data;
+                    if (subBleDevice.getSubId().equals("")) {
+                        viewHolder.mTextView.setText("00");
+                    } else {
+                        viewHolder.mTextView.setText(subBleDevice.getSubId());
+                    }
+                }
+            }
+        };
+
+        treeView.setAdapter(adapter);
+        TreeSubBleDevice treeSubBleDevice = new TreeSubBleDevice(subBleManager.getSubBleDevices(bleDeviceInfo.getMacCode()));
+        adapter.setRootNode(treeSubBleDevice.builTree());
+
         if (bleDeviceInfo!=null){
             bleDevice = ble.getBleDevice(bleDeviceInfo.getMacCode());
         }
@@ -63,6 +95,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
             ble.connect(bleDeviceInfo.getMacCode(), new BleConnectCallback<BleMLDevice>() {
                 @Override
                 public void onConnectionChanged(BleMLDevice device) {
+                    bleDevice=device;
                     if (device.isConnected()){
                         textView.setText("设备控制(已连接)");
                     }else if (device.isConnecting()){
@@ -164,6 +197,15 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
     @Override
     public int getContentView() {
         return R.layout.activity_controller_device;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ble!=null){
+            bleDevice = ble.getBleDevice(bleDeviceInfo.getMacCode());
+            ble.disconnect(bleDevice);
+        }
     }
 
     @Override

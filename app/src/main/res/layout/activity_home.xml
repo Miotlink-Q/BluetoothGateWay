@@ -10,22 +10,23 @@
         <TextView
             android:text="蓝牙设备"
             android:textColor="@color/black"
-            android:textSize="16dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:layout_height="match_parent"/>
 
-        <TextView
-            android:text="+"
+        <ImageView
+
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textSize="30dp"
-            android:layout_marginRight="10dp"
-            android:textColor="@color/black"
+
+            android:layout_marginRight="20dp"
+            android:src="@mipmap/add"
             android:id="@+id/add_bluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

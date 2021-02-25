@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -16,19 +14,42 @@
             android:layout_marginLeft="10dp"
             android:layout_width="25dp"
             android:layout_height="25dp"/>
-        <TextView
-            android:textColor="@color/black"
-            android:text="扫描设备"
-            android:textStyle="bold"
-            android:textSize="20dp"
+        <RelativeLayout
             android:layout_centerInParent="true"
-            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+            <TextView
+                android:text="添加设备"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:id="@+id/device_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:text=""
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@+id/device_title_tv"
+                android:id="@+id/device_connect_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/start_iv"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/start_1"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/scan_blue_rl"
-
         android:background="#019BFF"
         android:layout_width="match_parent"
         android:layout_height="40dp">
@@ -48,7 +69,7 @@
             app:raindropNum="4"/>
         <TextView
             android:layout_toRightOf="@+id/radar"
-            android:text="正在扫描附近的蓝牙设备"
+            android:text="正在加入子设备，请耐心等待"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:textColor="@color/white"
@@ -56,10 +77,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <FrameLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="300dp">
+        <de.blox.treeview.TreeView
+            android:id="@+id/treeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lineColor="@android:color/holo_blue_dark"/>
+    </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

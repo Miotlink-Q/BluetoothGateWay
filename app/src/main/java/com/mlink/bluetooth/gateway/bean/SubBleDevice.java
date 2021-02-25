@@ -16,7 +16,7 @@ public class SubBleDevice {
      */
     private String subId="";
 
-    private int level=0;
+    private String level="0";
 
     /**
      * 子设备名称
@@ -32,6 +32,8 @@ public class SubBleDevice {
      * 子设备开关状态
      */
     private int state=1;
+
+    private int nodeType=0;
 
     public String getSubId() {
         return subId;
@@ -81,11 +83,19 @@ public class SubBleDevice {
         this.macCode = macCode;
     }
 
-    public int getLevel() {
+    public void setNodeType(int nodeType) {
+        this.nodeType = nodeType;
+    }
+
+    public int getNodeType() {
+        return nodeType;
+    }
+
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 

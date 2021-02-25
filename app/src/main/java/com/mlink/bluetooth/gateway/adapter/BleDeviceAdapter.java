@@ -31,13 +31,13 @@ class BleDeviceAdapter extends BaseQuickAdapter<BleDeviceInfo, BaseViewHolder> {
 
 
         if (bleDeviceInfo.getState()==1){
-            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已发现)");
+            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode());
             imageView.setImageResource(R.mipmap.bluetooth_device_2);
         }else if (bleDeviceInfo.getState()==2){
-            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(已连接)");
+            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode());
             imageView.setImageResource(R.mipmap.bluetooth_device_1);
         }else {
-            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode()+" "+"(未连接)");
+            baseViewHolder.setText(R.id.device_name,bleDeviceInfo.getMacCode());
             imageView.setImageResource(R.mipmap.bluetooth_device_2);
         }
 

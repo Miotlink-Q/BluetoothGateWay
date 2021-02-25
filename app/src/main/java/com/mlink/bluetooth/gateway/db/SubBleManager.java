@@ -75,6 +75,19 @@ class SubBleManager extends DataManager {
         }
     }
 
+    public void updateSubDeviceNodeState(int state,String macCode,String subId){
+        try {
+            SubBleDevice subBleDevice=new SubBleDevice();
+            subBleDevice.setNodeType(state);
+            subBleDevice.setMacCode(macCode);
+            WhereBuilder whereBuilder= WhereBuilder.b("macCode","=",macCode).and("subId","=",subId);
+            dbUtils.update(subBleDevice,whereBuilder,"nodeType");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addDevice(BleDeviceInfo bleDeviceInfo){
         try {
             dbUtils.saveOrUpdate(bleDeviceInfo);

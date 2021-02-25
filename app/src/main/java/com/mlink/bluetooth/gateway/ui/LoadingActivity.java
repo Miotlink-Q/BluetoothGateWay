@@ -9,6 +9,7 @@ import com.ml.bluetooth.gateway.ble.Ble;
 import com.mlink.bluetooth.gateway.R;
 import com.mlink.bluetooth.gateway.application.GateWayApplication;
 import com.mlink.bluetooth.gateway.base.BaseActivity;
+import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
 import com.mlink.bluetooth.gateway.db.SubBleManager;
 import com.permissionx.guolindev.PermissionX;
@@ -26,6 +27,14 @@ public class LoadingActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                List<BleDeviceInfo> bleDeviceInfos= SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos();
+                if (bleDeviceInfos!=null&&bleDeviceInfos.size()>0){
+                    for (BleDeviceInfo bleDeviceInfo:bleDeviceInfos){
+
+                        SubBleManager.getInstance(GateWayApplication.getInstance()).updateBleDeviceInfo(bleDeviceInfo.getMacCode(),0);
+                    }
+                }
                 SubBleManager.getInstance(GateWayApplication.getInstance()).updateAll();
 
                 PermissionX.init(LoadingActivity.this).permissions(Manifest.permission.ACCESS_FINE_LOCATION,

@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
@@ -36,7 +39,7 @@ public
 class HomeActivity extends BaseActivity implements View.OnClickListener {
 
 
-    private TextView textView;
+    private ImageView textView;
 
     private RecyclerView recyclerView;
 
@@ -79,7 +82,14 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                         .setTitle("提示")
                         .setMessage("是否删除该设备")
                         .setPositiveButton("确定", (dialog, which) -> {
-
+                            try {
+                               BleMLDevice bleMLDevice= ble.getBleDevice(bleDeviceInfo.getMacCode());
+                                if(bleMLDevice!=null){
+                                    ble.disconnect(bleMLDevice);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             SubBleManager.getInstance(GateWayApplication.getInstance()).deleteDevice(bleDeviceInfo.getMacCode());
                             bleDeviceAdapter.setNewInstance(SubBleManager.getInstance(GateWayApplication.getInstance()).getBleDeviceInfos());
                         })
@@ -94,10 +104,10 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        bluetoothDeviceStore.clear();
+//        bluetoothDeviceStore.clear();
         if (ble!=null){
             if(ble.isBleEnable()){
-                ble.startScan(bleMLDeviceBleScanCallback);
+//                ble.startScan(bleMLDeviceBleScanCallback);
                 List<BleMLDevice> connectedDevices = ble.getConnectedDevices();
                 if (connectedDevices!=null&&connectedDevices.size()>0){
                     for (BleMLDevice bleMLDevice:connectedDevices){
@@ -116,9 +126,9 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        if (ble!=null){
-            ble.stopScan();
-        }
+//        if (ble!=null){
+//            ble.stopScan();
+//        }
     }
 
     @Override
@@ -152,5 +162,25 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
         }
     };
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    private long exitTime = 0;
+
+    private void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(mContext, "再按一次退出程序",Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            ble.disconnectAll();
+            ble.released();
+            System.exit(0);
+        }
+    }
 }
