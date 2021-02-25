@@ -28,7 +28,7 @@ public class TreeSubBleDevice {
 
         SubBleDevice subBleDevice=new SubBleDevice();
         subBleDevice.setLevel("FFFF");
-        subBleDevice.setSubId("Root");
+        subBleDevice.setSubId("ROOT");
         TreeNode treeNode=new TreeNode(subBleDevice);
         if (subBleDevices!=null&&subBleDevices.size()>0){
             for (SubBleDevice subBleDevice1:subBleDevices){

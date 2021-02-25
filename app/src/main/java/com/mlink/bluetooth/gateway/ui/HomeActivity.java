@@ -26,6 +26,7 @@ import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
 import com.mlink.bluetooth.gateway.bean.BluetoothDeviceStore;
 import com.mlink.bluetooth.gateway.db.SubBleManager;
+import com.tencent.mmkv.MMKV;
 
 import java.util.List;
 
@@ -87,6 +88,7 @@ class HomeActivity extends BaseActivity implements View.OnClickListener {
                                 if(bleMLDevice!=null){
                                     ble.disconnect(bleMLDevice);
                                 }
+                                MMKV.defaultMMKV().remove("ALL_STATE"+bleDeviceInfo.getMacCode());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

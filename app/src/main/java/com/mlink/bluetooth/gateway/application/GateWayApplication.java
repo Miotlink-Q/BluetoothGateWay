@@ -11,6 +11,7 @@ import com.ml.bluetooth.gateway.ble.utils.UuidUtils;
 import com.mlink.bluetooth.gateway.bean.BleDeviceInfo;
 import com.mlink.bluetooth.gateway.bean.BleMLDevice;
 import com.mlink.bluetooth.gateway.bean.SubBleDevice;
+import com.tencent.mmkv.MMKV;
 
 import java.util.UUID;
 
@@ -26,6 +27,7 @@ class GateWayApplication extends Application {
         super.onCreate();
         instance=this;
 
+        MMKV.initialize(this);
         DataManager.cazz= new Class[]{BleDeviceInfo.class, SubBleDevice.class};
         Ble.options()
                 .setLogBleEnable(true)//设置是否输出打印蓝牙日志

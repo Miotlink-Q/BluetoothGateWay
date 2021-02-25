@@ -2,6 +2,7 @@ package com.mlink.bluetooth.gateway.ui;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.mlink.bluetooth.gateway.bean.SubBleDevice;
 import com.mlink.bluetooth.gateway.bean.TreeSubBleDevice;
 import com.mlink.bluetooth.gateway.db.SubBleManager;
 import com.mlink.bluetooth.gateway.view.ViewHolder;
+import com.tencent.mmkv.MMKV;
 
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
     private ImageView imageView,back;
     private TextView textView;
     private RecyclerView recyclerView=null;
-    private boolean isSwitchState=false;
+
     public static BleDeviceInfo bleDeviceInfo=null;
     private Ble<BleMLDevice> ble=Ble.getInstance();
     private BleMLDevice bleDevice=null;
@@ -56,10 +58,17 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
         textView=findViewById(R.id.device_title_state);
         imageView.setOnClickListener(this);
         back.setOnClickListener(this);
+
         subBleDeviceAdapter=new SubBleDeviceAdapter();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(subBleDeviceAdapter);
         subBleDeviceAdapter.setNewInstance(subBleManager.getSubBleDevices(bleDeviceInfo.getMacCode()));
+        boolean isSwitchState=MMKV.defaultMMKV().getBoolean("ALL_STATE"+bleDeviceInfo.getMacCode(), true);
+        if (isSwitchState){
+            imageView.setImageResource(R.mipmap.switch_open_1);
+        }else {
+            imageView.setImageResource(R.mipmap.switch_close);
+        }
         adapter = new BaseTreeAdapter<ViewHolder>(this, R.layout.item_node_sub_device) {
             @NonNull
             @Override
@@ -72,9 +81,15 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
 
                 if (data instanceof SubBleDevice) {
                     SubBleDevice subBleDevice = (SubBleDevice) data;
-                    if (subBleDevice.getSubId().equals("")) {
-                        viewHolder.mTextView.setText("00");
-                    } else {
+                    if (!TextUtils.isEmpty(subBleDevice.getSubId())
+                            &&subBleDevice.getSubId().length()>2){
+                        if (subBleDevice.getSubId().startsWith("FF")
+                                ||subBleDevice.getSubId().startsWith("00")){
+                            viewHolder.mTextView.setText(subBleDevice.getSubId().substring(2,subBleDevice.getSubId().length()));
+                        }else {
+                            viewHolder.mTextView.setText(subBleDevice.getSubId());
+                        }
+                    }else {
                         viewHolder.mTextView.setText(subBleDevice.getSubId());
                     }
                 }
@@ -222,8 +237,9 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
                 byte[] bytes=null;
                 if (bleDevice.isConnected()){
                     bytes=ByteUtils.hexStr2Bytes("FFFA000400001200");
+                    boolean isSwitchState=MMKV.defaultMMKV().getBoolean("ALL_STATE"+bleDevice.getBleAddress(), true);
                     if (isSwitchState){
-                        isSwitchState=false;
+                        MMKV.defaultMMKV().putBoolean("ALL_STATE"+bleDevice.getBleAddress(), false);
                         imageView.setImageResource(R.mipmap.switch_close);
                         subBleManager.updateSubDeviceState(0,bleDeviceInfo.getMacCode(),"");
                         ble.writeByUuid(bleDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(), new BleWriteCallback<BleMLDevice>() {
@@ -235,7 +251,7 @@ class DeviceControllerActivity extends BaseActivity implements View.OnClickListe
 
                     }else {
                         subBleManager.updateSubDeviceState(1,bleDeviceInfo.getMacCode(),"");
-                        isSwitchState=true;
+                        MMKV.defaultMMKV().putBoolean("ALL_STATE"+bleDevice.getBleAddress(), true);
                         imageView.setImageResource(R.mipmap.switch_open_1);
                         bytes=ByteUtils.hexStr2Bytes("FFFA000400001201");
                         ble.writeByUuid(bleDevice,bytes,Ble.options().getUuidService(),Ble.options().getUuidWriteCha(), new BleWriteCallback<BleMLDevice>() {

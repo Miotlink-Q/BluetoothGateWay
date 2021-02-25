@@ -73,28 +73,9 @@ public class SubBleDeviceAddActivity extends BaseActivity {
         startIv = findViewById(R.id.start_iv);
         connectTv = findViewById(R.id.device_connect_tv);
         treeView = findViewById(R.id.treeView);
-        adapter = new BaseTreeAdapter<ViewHolder>(this, R.layout.item_node_sub_device) {
-            @NonNull
-            @Override
-            public ViewHolder onCreateViewHolder(View view) {
-                return new ViewHolder(view);
-            }
-
-            @Override
-            public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
-
-                if (data instanceof SubBleDevice) {
-                    SubBleDevice subBleDevice = (SubBleDevice) data;
-                    if (subBleDevice.getSubId().equals("")) {
-                        viewHolder.mTextView.setText("00");
-                    } else {
-                        viewHolder.mTextView.setText(subBleDevice.getSubId());
-                    }
-                }
-            }
-        };
-
-
+        radarView = findViewById(R.id.radar);
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         findViewById(R.id.back_iv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,14 +100,40 @@ public class SubBleDeviceAddActivity extends BaseActivity {
                 myThread.start();
             }
         });
-        radarView = findViewById(R.id.radar);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
         subBleManager = SubBleManager.getInstance(GateWayApplication.getInstance());
         subBleDeviceAdapter = new SubBleDeviceAdapter();
 
         recyclerView.setAdapter(subBleDeviceAdapter);
         List<SubBleDevice> subBleDevices = subBleManager.getSubBleDevices(bleMLDevice.getBleAddress());
+        adapter = new BaseTreeAdapter<ViewHolder>(this, R.layout.item_node_sub_device) {
+            @NonNull
+            @Override
+            public ViewHolder onCreateViewHolder(View view) {
+                return new ViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(ViewHolder viewHolder, Object data, int position) {
+
+                if (data instanceof SubBleDevice) {
+                    SubBleDevice subBleDevice = (SubBleDevice) data;
+                    if (!TextUtils.isEmpty(subBleDevice.getSubId())
+                            &&subBleDevice.getSubId().length()>2){
+                        if (subBleDevice.getSubId().startsWith("FF")
+                                ||subBleDevice.getSubId().startsWith("00")){
+                            viewHolder.mTextView.setText(subBleDevice.getSubId().substring(2,subBleDevice.getSubId().length()));
+                        }else {
+                            viewHolder.mTextView.setText(subBleDevice.getSubId());
+                        }
+                    }else {
+                        viewHolder.mTextView.setText(subBleDevice.getSubId());
+                    }
+                }
+            }
+        };
+
+
         treeView.setAdapter(adapter);
         TreeSubBleDevice treeSubBleDevice = new TreeSubBleDevice(subBleDevices);
 //            adapter.setRootNode(Consts.getTreeNode(bleMLDevice.getBleAddress()));

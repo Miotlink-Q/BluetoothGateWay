@@ -20,8 +20,17 @@ public class SubBleDeviceAdapter extends BaseQuickAdapter<SubBleDevice, BaseView
 
     @Override
     protected void convert(@NotNull BaseViewHolder baseViewHolder, SubBleDevice subBleDevice) {
+        if (!TextUtils.isEmpty(subBleDevice.getSubId())
+                &&subBleDevice.getSubId().length()>2){
+            if (subBleDevice.getSubId().startsWith("FF")
+                    ||subBleDevice.getSubId().startsWith("00")){
+                baseViewHolder.setText(R.id.sub_device_name_tv,subBleDevice.getSubId().substring(2,subBleDevice.getSubId().length()));
+            }
+        }else {
+            baseViewHolder.setText(R.id.sub_device_name_tv,subBleDevice.getSubId());
 
-        baseViewHolder.setText(R.id.sub_device_name_tv,subBleDevice.getSubId());
+        }
+//        baseViewHolder.setText(R.id.sub_device_name_tv,subBleDevice.getSubId());
         ImageView imageView=baseViewHolder.itemView.findViewById(R.id.sub_device_state_iv);
         TextView liv=baseViewHolder.itemView.findViewById(R.id.sub_device_l_tv);
         if (!TextUtils.isEmpty(subBleDevice.getLevel())
@@ -33,7 +42,7 @@ public class SubBleDeviceAdapter extends BaseQuickAdapter<SubBleDevice, BaseView
         }else {
             liv.setText(subBleDevice.getLevel());
         }
-        liv.setVisibility(View.VISIBLE);
+//        liv.setVisibility(View.VISIBLE);
         if (subBleDevice.getNodeType()==1){
             liv.setBackgroundResource(R.drawable.device_shape_1);
         }
